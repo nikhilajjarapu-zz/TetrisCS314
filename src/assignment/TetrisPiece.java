@@ -149,7 +149,11 @@ public final class TetrisPiece implements Piece
 	public Piece clockwisePiece()
 	{
 		this.rotationIndex = this.rotationIndex + 1;
-		return new TetrisPiece(this.type, this.rotationIndex % 4);
+		if (this.rotationIndex > 3)
+		{
+			this.rotationIndex = 0;
+		}
+		return new TetrisPiece(this.type, this.rotationIndex);
 	}
 
 	@Override
@@ -160,7 +164,7 @@ public final class TetrisPiece implements Piece
 		{
 			rotationIndex = 3;
 		}
-		
+
 		return new TetrisPiece(this.type, this.rotationIndex);
 	}
 
