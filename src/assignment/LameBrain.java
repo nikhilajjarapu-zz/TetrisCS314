@@ -7,7 +7,7 @@ import java.util.*;
  * piece (but ignoring rotations, because we're lame), trying to minimize the
  * total height of pieces on the board.
  */
-public class LameBrain implements Brain {
+public class LameBrain extends JTetris implements Brain {
 
     private ArrayList<Board> options;
     private ArrayList<Board.Action> firstMoves;

@@ -308,70 +308,71 @@ public final class TetrisBoard implements Board {
 		return true;
 	}
 
+	//talked
 	@Override
 	public Result getLastResult() {
 		return lastResult;
 	}
-
+	//talked
 	@Override
 	public Action getLastAction() {
 		return lastAction;
 	}
-
+	//talked
 	@Override
 	public int getRowsCleared() {
 		return rowsCleared;
 	}
-
+	//talked
 	@Override
 	public int getWidth() {
 		return width;
 	}
-
+	//talked
 	@Override
 	public int getHeight() {
 		return height;
 	}
-
+	//talked
 	@Override
 	public int getMaxHeight() {
 		return maxColHeight;
 	}
-
+	
 	@Override
 	public int dropHeight(Piece piece, int x) {
 		return 0;
 	}
-
+	//talked
 	@Override
 	public int getColumnHeight(int x) {
 		return columnHeights[x];
 	}
-
+	//talked
 	@Override
 	public int getRowWidth(int y) {
 		int boardX = height - y - 1;
 		return rowFill[boardX];
 	}
-
+	//talked
 	@Override
 	public Piece.PieceType getGrid(int x, int y) {
 		return board[height - y - 1][x];
 	}
-
+	//talked
 	public Point gameToBoard(Point gamePoint) {
 		Point boardPoint = new Point();
 		boardPoint.y = gamePoint.x;
 		boardPoint.x = height - gamePoint.y - 1;
 		return boardPoint;
 	}
-
+	//talked
 	public void updateRowFill(Point[] currentCoords) {
 		for (int i = 0; i < currentCoords.length; i++) {
 			rowFill[currentCoords[i].x]++;
 		}
 	}
-
+	//talked
 	public void updateColumnFill(Point[] currentCoords) {
 		for (int i = 0; i < currentCoords.length; i++) {
 			if ((height - currentCoords[i].x) > columnHeights[currentCoords[i].y]) {
@@ -389,6 +390,7 @@ public final class TetrisBoard implements Board {
 		int counter = height - 1;
 
 		for (int i = height - 1; i > maxColHeight; i--) {
+			//add lines to new board that are not filled
 			if (rowFill[i] != width) {
 				newBoard[counter] = board[i];
 				counter--;
