@@ -58,8 +58,6 @@ public final class TetrisBoard implements Board {
 				clearLines();
 			}
 		}
-		
-		System.out.println(Arrays.toString(rowFill));
 
 		// three steps
 		// 1. delete current piece off board
@@ -254,12 +252,12 @@ public final class TetrisBoard implements Board {
 	public Board testMove(Action act) {
 		return null;
 	}
-
+	//talked
 	@Override
 	public Piece getCurrentPiece() {
 		return this.currentPiece;
 	}
-
+	//talked
 	@Override
 	public Point getCurrentPiecePosition() {
 		if (currentPiece == null) {
@@ -267,7 +265,7 @@ public final class TetrisBoard implements Board {
 		}
 		return currentPiecePosition;
 	}
-
+	
 	@Override
 	public void nextPiece(Piece p, Point spawnPosition) {
 		currentPiecePosition = spawnPosition;
