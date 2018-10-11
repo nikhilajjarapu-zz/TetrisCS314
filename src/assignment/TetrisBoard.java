@@ -53,11 +53,13 @@ public final class TetrisBoard implements Board {
 			return Result.NO_PIECE;
 		}
 		
-		for (int i = height - 1; i > maxColHeight; i --) {
+		for (int i = 0; i < height; i ++) {
 			if (rowFill[i] >= width) {
 				clearLines();
 			}
 		}
+		
+		System.out.println(Arrays.toString(rowFill));
 
 		// three steps
 		// 1. delete current piece off board
@@ -106,12 +108,12 @@ public final class TetrisBoard implements Board {
 				Point modifiedP = new Point(currentPieceCoords[i]);
 				modifiedP.translate(0, -1);
 				if (modifiedP.y < 0) {
-					lastResult = Result.PLACE;
+					lastResult = Result.OUT_BOUNDS;
 					return Result.OUT_BOUNDS;
 				}
 				if (!Arrays.asList(currentPieceCoords).contains(modifiedP)) {
 					if (board[modifiedP.x][modifiedP.y] != null) {
-						lastResult = Result.PLACE;
+						lastResult = Result.OUT_BOUNDS;
 						return Result.OUT_BOUNDS;
 					}
 				}
@@ -181,8 +183,68 @@ public final class TetrisBoard implements Board {
 		}
 
 		if (act.equals(Action.DROP)) {
-			System.out.println(getColumnHeight(0));
+			
+			int lowestDifference = Integer.MAX_VALUE;
+			// step 1
+			for (int i = 0; i < currentPieceCoords.length; i++) {
+				board[currentPieceCoords[i].x][currentPieceCoords[i].y] = null;
+				
+				int colPosition = height - getColumnHeight(currentPieceCoords[i].y) - 1;
+				int tempLowestDifference = colPosition - currentPieceCoords[i].x;
+				if (tempLowestDifference < lowestDifference) {
+					lowestDifference = tempLowestDifference;
+				}
+			}
+			// step 2
+			for (int i = 0; i < currentPieceCoords.length; i++) {
+				currentPieceCoords[i].x += lowestDifference;
+			}
+			// step 3
+			for (int i = 0; i < currentPieceCoords.length; i++) {
+				board[currentPieceCoords[i].x][currentPieceCoords[i].y] = currentPiece.getType();
+			}
+			currentPiecePosition.x += lowestDifference;// update current piece position
+			
+			updateRowFill(currentPieceCoords);
+			updateColumnFill(currentPieceCoords);
+			lastResult = Result.PLACE;
+			return Result.PLACE;
 		}
+		
+//		if (act.equals(Action.DROP)) {
+////			//get tallest column for piece
+//			int maxColumnHeight = Integer.MIN_VALUE;
+//			for (int i = 0; i < currentPieceCoords.length; i ++) {
+//				int tempColHeight = getColumnHeight(currentPieceCoords[i].y);
+//				if (maxColumnHeight < tempColHeight) {
+//					maxColumnHeight = tempColHeight;
+//				}
+//			}
+//			int dropHeight = height - maxColumnHeight - 1;
+//			
+//			int lowestCoord = Integer.MIN_VALUE;
+//			// step 1
+//			for (int i = 0; i < currentPieceCoords.length; i++) {
+//				board[currentPieceCoords[i].x][currentPieceCoords[i].y] = null;
+//				if (currentPieceCoords[i].x > lowestCoord) {
+//					lowestCoord = currentPieceCoords[i].x;
+//				}
+//			}
+//			// step 2
+//			for (int i = 0; i < currentPieceCoords.length; i++) {
+//				currentPieceCoords[i].x = dropHeight - (lowestCoord - currentPieceCoords[i].x);
+//			}
+//			// step 3
+//			for (int i = 0; i < currentPieceCoords.length; i++) {
+//				board[currentPieceCoords[i].x][currentPieceCoords[i].y] = currentPiece.getType();
+//			}
+//			currentPiecePosition.x = lowestCoord; // update current piece position
+//			
+//			updateRowFill(currentPieceCoords);
+//			updateColumnFill(currentPieceCoords);
+//			lastResult = Result.PLACE;
+//			return Result.PLACE;
+//		}
 
 		lastResult = Result.SUCCESS;
 		return Result.SUCCESS;
@@ -319,7 +381,6 @@ public final class TetrisBoard implements Board {
 				maxColHeight = height - currentCoords[i].x;
 			}
 		}
-		System.out.println(maxColHeight);
 	}
 
 	public void clearLines() {
