@@ -50,6 +50,7 @@ public class LameBrain implements Brain {
         // Now we'll add all the places to the left we can DROP
         Board left = currentBoard.testMove(Board.Action.LEFT);
         while (left.getLastResult() == Board.Result.SUCCESS) {
+        	System.out.println("moved left one");
             options.add(left.testMove(Board.Action.DROP));
             firstMoves.add(Board.Action.LEFT);
             left.move(Board.Action.LEFT);

@@ -13,16 +13,12 @@ import assignment.Piece.PieceType;
  * have any idea of pixels. Instead, just represents the abstract 2-d board.
  */
 
-//things to finish:
-
-//1) return null for getgrid()
-
 public final class TetrisBoard implements Board
 {
 	// width and height of board
 	private int width;
 	private int height;
-	private PieceType[][] board; // 2d board matrix
+	public PieceType[][] board; // 2d board matrix
 	private Piece currentPiece; // current piece to mutate
 	private Point[] currentPieceCoords; // holds (x,y) values of piecetypes
 	private Point currentPiecePosition;
@@ -31,8 +27,7 @@ public final class TetrisBoard implements Board
 	private Result lastResult;
 	private Action lastAction;
 	private int rowsCleared;
-	private int maxColHeight;
-	private int dropHeight;
+	public int maxColHeight;
 
 	// JTetris will use this constructor
 	public TetrisBoard(int width, int height)
@@ -48,8 +43,31 @@ public final class TetrisBoard implements Board
 		lastAction = Action.NOTHING;
 		rowsCleared = 0;
 		maxColHeight = 0;
-		dropHeight = 0;
-		// System.out.println(height);
+		currentPieceCoords = new Point[4];
+	}
+
+	public TetrisBoard(int width, int height, PieceType[][] board, int[] rowFill, int[] columnHeights, int maxColHeight,
+			Piece currentPiece, Point currentPiecePosition, Point[] currentPieceCoords, Result lastResult,
+			Action lastAction)
+	{
+		this.width = width;
+		this.height = height;
+		this.rowFill = rowFill;
+		this.columnHeights = columnHeights;
+		this.maxColHeight = maxColHeight;
+		this.currentPiece = currentPiece;
+		this.currentPiecePosition = currentPiecePosition;
+		this.currentPieceCoords = currentPieceCoords;
+		this.lastResult = lastResult;
+		this.lastAction = lastAction;
+		this.board = new PieceType[board.length][board[0].length];
+		for (int i = 0; i < board.length; i++)
+		{
+			for (int j = 0; j < board[i].length; j++)
+			{
+				this.board[i][j] = board[i][j];
+			}
+		}
 	}
 
 	@Override
@@ -71,8 +89,6 @@ public final class TetrisBoard implements Board
 				clearLines();
 			}
 		}
-
-		// System.out.println(Arrays.toString(rowFill));
 
 		// three steps
 		// 1. delete current piece off board
@@ -226,17 +242,17 @@ public final class TetrisBoard implements Board
 				for (int i = 0; i < wallKicks.length; i++)
 				{
 					Point wallKick = wallKicks[i];
-					System.out.println("WallKick #" + i + ": " + wallKick);
+					// System.out.println("WallKick #" + i + ": " + wallKick);
 					try
 					{
 						nextPiece(currentPiece,
 								new Point(currentPiecePosition.x + wallKick.y, currentPiecePosition.y - wallKick.x));
 					} catch (IllegalArgumentException iae)
 					{
-						System.out.println("Failed.");
+						// System.out.println("Failed.");
 						continue;
 					}
-					System.out.println("Worked!");
+					// System.out.println("Worked!");
 					worked = true;
 					break;
 				}
@@ -277,17 +293,14 @@ public final class TetrisBoard implements Board
 				for (int i = 0; i < wallKicks.length; i++)
 				{
 					Point wallKick = wallKicks[i];
-					System.out.println("WallKick #" + i + ": " + wallKick);
 					try
 					{
 						nextPiece(currentPiece,
 								new Point(currentPiecePosition.x + wallKick.y, currentPiecePosition.y - wallKick.x));
 					} catch (IllegalArgumentException iae)
 					{
-						System.out.println("Failed.");
 						continue;
 					}
-					System.out.println("Worked!");
 					worked = true;
 					break;
 				}
@@ -343,7 +356,10 @@ public final class TetrisBoard implements Board
 	@Override
 	public Board testMove(Action act)
 	{
-		return null;
+		TetrisBoard b = new TetrisBoard(width, height, board, rowFill, columnHeights, maxColHeight, currentPiece,
+				currentPiecePosition, currentPieceCoords, lastResult, lastAction);
+		b.move(act);
+		return b;
 	}
 
 	@Override
@@ -465,7 +481,8 @@ public final class TetrisBoard implements Board
 	@Override
 	public int dropHeight(Piece piece, int x)
 	{
-		return dropHeight;
+
+		return 0;
 	}
 
 	@Override
@@ -484,6 +501,13 @@ public final class TetrisBoard implements Board
 	@Override
 	public Piece.PieceType getGrid(int x, int y)
 	{
+		for (int i = 0; i < currentPieceCoords.length; i++)
+		{
+			if (new Point(height - y - 1, x).equals(currentPieceCoords[i]))
+			{
+				return null;
+			}
+		}
 		return board[height - y - 1][x];
 	}
 
@@ -557,6 +581,18 @@ public final class TetrisBoard implements Board
 			}
 		}
 
+	}
+
+	public void printBoard(PieceType[][] board)
+	{
+		for (int i = 0; i < board.length; i++)
+		{
+			for (int j = 0; j < board[i].length; j++)
+			{
+				System.out.print(board[i][j] + " ");
+			}
+			System.out.println();
+		}
 	}
 
 }
